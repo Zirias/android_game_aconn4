@@ -110,8 +110,8 @@ public class Aconn4Activity extends Activity implements Aconn4EventListener {
 	
 	private void restartGame() {
 		if (_ai != null) {
-			_ai.cancel(true);
-			_ai = null;
+			_ai.cancel();
+			return;
 		}
 		_layout.setButtonsEnabled(true);
 		Board b = _state.getBoard();
@@ -124,8 +124,12 @@ public class Aconn4Activity extends Activity implements Aconn4EventListener {
 		showGameDialog("Do you really want to restart?", true);
 	}
 	
-	public void onAiDone() {
+	public void onAiDone(boolean isCancelled) {
 		_ai = null;
+		if (isCancelled) {
+			restartGame();
+			return;
+		}
 		Player p = _state.getActivePlayer();
 		_layout.setPieceAt(p.getPiece(), p.getLastRow(), p.getLastColumn());
 		_layout.setButtonsEnabled(true);		
@@ -135,5 +139,6 @@ public class Aconn4Activity extends Activity implements Aconn4EventListener {
 
 	public void onDifficultyChange(int difficulty) {
 		Player.setDifficulty(difficulty);
-	}	
+	}
+
 }

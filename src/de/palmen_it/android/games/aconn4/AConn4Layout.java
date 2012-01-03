@@ -271,7 +271,7 @@ public class AConn4Layout extends LinearLayout implements OnClickListener, OnSee
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 		if (!fromUser) return;
 		for (Aconn4EventListener l: _eventListeners) {
-			l.onDifficultyChange(progress);
+			l.onDifficultyChange(progress + 2);
 		}
 		_difficultyView.setText(String.valueOf(progress + 2));
 	}
