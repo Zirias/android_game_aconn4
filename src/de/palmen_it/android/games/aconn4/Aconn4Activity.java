@@ -14,14 +14,21 @@ public class Aconn4Activity extends Activity implements Aconn4EventListener {
 	private GameState _state;
 	private DataBase _db;
 	
-	private static void updateLayoutFromBoard(AConn4Layout l, Board b)
-	{
+	private static void updateLayoutFromBoard(AConn4Layout l, Board b) {
         for (int row = 0; row < 6; ++row) {
         	for (int col = 0; col < 7; ++col) {
         		l.setPieceAt(b.getPieceAt(row, col), row, col);
         	}
-        }		
+        }
+        if (b.getNumberOfInserts() == 0) {
+        	l.setRestartEnabled(false);
+        	l.setOptionsEnabled(true);
+        } else {
+        	l.setRestartEnabled(true);
+        	l.setOptionsEnabled(false);
+        }
 	}
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,6 +39,8 @@ public class Aconn4Activity extends Activity implements Aconn4EventListener {
         _db = new DataBase(this);
         _state = _db.loadGameState();
         updateLayoutFromBoard(_layout, _state.getBoard());
+        _layout.setMode(_state.getMode());
+        _layout.setDifficulty(Player.getDifficulty());
         String message = _state.getMessage();
         if (message != null) showGameDialog(message, _state.getCanCancelDialog());
     }
@@ -85,6 +94,8 @@ public class Aconn4Activity extends Activity implements Aconn4EventListener {
 			if (checkWinner()) return;
 			_state.togglePlayer();
 			p = _state.getActivePlayer();
+			_layout.setRestartEnabled(true);
+			_layout.setOptionsEnabled(false);
 			if (p.getIsHuman()) return;
 			_layout.setButtonsEnabled(false);
 			AITask ai = new AITask(this);
@@ -92,6 +103,10 @@ public class Aconn4Activity extends Activity implements Aconn4EventListener {
 		}
 	}
 
+	public void onModeChange(int mode) {
+		_state.setMode(mode);
+	}
+	
 	private void restartGame() {
 		Board b = _state.getBoard();
 		b.clear();
@@ -109,5 +124,9 @@ public class Aconn4Activity extends Activity implements Aconn4EventListener {
 		_layout.setButtonsEnabled(true);		
 		if (checkWinner()) return;
 		_state.togglePlayer();
+	}
+
+	public void onDifficultyChange(int difficulty) {
+		Player.setDifficulty(difficulty);
 	}	
 }

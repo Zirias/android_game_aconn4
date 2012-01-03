@@ -64,7 +64,7 @@ public class GameState {
 		} else {
 			throw new IllegalArgumentException("Unknown mode");
 		}
-		_player1.setIsHuman(false);
+		_player1.setIsHuman(true);
 	}
 	public boolean getCanCancelDialog() {
 		return _canCancelDialog;
