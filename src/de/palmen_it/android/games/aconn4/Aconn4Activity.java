@@ -53,12 +53,6 @@ public class Aconn4Activity extends Activity implements Aconn4EventListener {
     	_db.saveGameState(_state);
     }
     
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-    	super.onConfigurationChanged(newConfig);
-    	_layout.invalidate();
-    }
-    
     private void showGameDialog(String message, boolean allowCancel) {
     	_state.setMessage(message);
     	_state.setCanCancelDialog(allowCancel);
