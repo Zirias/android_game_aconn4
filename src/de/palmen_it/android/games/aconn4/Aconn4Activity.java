@@ -6,7 +6,6 @@ import de.palmen_it.games.p4j.gamelogic.Player;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.res.Configuration;
 import android.os.Bundle;
 
 public class Aconn4Activity extends Activity implements Aconn4EventListener {
