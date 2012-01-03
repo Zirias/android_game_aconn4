@@ -13,6 +13,7 @@ public class Aconn4Activity extends Activity implements Aconn4EventListener {
 	private AConn4Layout _layout;
 	private GameState _state;
 	private DataBase _db;
+	private AITask _ai;
 	
 	private static void updateLayoutFromBoard(AConn4Layout l, Board b) {
         for (int row = 0; row < 6; ++row) {
@@ -98,8 +99,8 @@ public class Aconn4Activity extends Activity implements Aconn4EventListener {
 			_layout.setOptionsEnabled(false);
 			if (p.getIsHuman()) return;
 			_layout.setButtonsEnabled(false);
-			AITask ai = new AITask(this);
-			ai.execute(p);
+			_ai = new AITask(this);
+			_ai.execute(p);
 		}
 	}
 
@@ -108,6 +109,11 @@ public class Aconn4Activity extends Activity implements Aconn4EventListener {
 	}
 	
 	private void restartGame() {
+		if (_ai != null) {
+			_ai.cancel(true);
+			_ai = null;
+		}
+		_layout.setButtonsEnabled(true);
 		Board b = _state.getBoard();
 		b.clear();
 		_state.setActivePlayer(_state.getPlayer1());
@@ -119,6 +125,7 @@ public class Aconn4Activity extends Activity implements Aconn4EventListener {
 	}
 	
 	public void onAiDone() {
+		_ai = null;
 		Player p = _state.getActivePlayer();
 		_layout.setPieceAt(p.getPiece(), p.getLastRow(), p.getLastColumn());
 		_layout.setButtonsEnabled(true);		

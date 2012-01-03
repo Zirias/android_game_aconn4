@@ -1,9 +1,10 @@
 package de.palmen_it.android.games.aconn4;
 
+import de.palmen_it.games.p4j.gamelogic.AITaskDescriptor;
 import de.palmen_it.games.p4j.gamelogic.Player;
 import android.os.AsyncTask;
 
-public class AITask extends AsyncTask<Player, Void, Void> {
+public class AITask extends AsyncTask<Player, Void, Void> implements AITaskDescriptor {
 
 	private final Aconn4EventListener _listener;
 	
@@ -16,9 +17,9 @@ public class AITask extends AsyncTask<Player, Void, Void> {
 		Player p = players[0];
 		
 		if (p.getIsHuman()) {
-			p.getBestColumns();
+			p.getBestColumns(this);
 		} else {
-			p.move();
+			p.move(this);
 		}
 		
 		return null;
