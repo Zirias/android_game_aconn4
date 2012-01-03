@@ -6,6 +6,7 @@ import de.palmen_it.games.p4j.gamelogic.Player;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 public class Aconn4Activity extends Activity implements Aconn4EventListener {
@@ -50,6 +51,12 @@ public class Aconn4Activity extends Activity implements Aconn4EventListener {
     protected void onPause() {
     	super.onPause();
     	_db.saveGameState(_state);
+    }
+    
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+    	super.onConfigurationChanged(newConfig);
+    	_layout.invalidate();
     }
     
     private void showGameDialog(String message, boolean allowCancel) {

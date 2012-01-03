@@ -177,9 +177,7 @@ public class AConn4Layout extends LinearLayout implements OnClickListener, OnSee
 	}
 	
 	@Override
-	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-		super.onSizeChanged(w, h, oldw, oldh);
-		
+	protected void onSizeChanged(int w, int h, int oldw, int oldh) {		
         int totalSize, tileSize;
         if (h > w) {
         	totalSize = w;
@@ -201,6 +199,10 @@ public class AConn4Layout extends LinearLayout implements OnClickListener, OnSee
         		v.setLayoutParams(new TableRow.LayoutParams(tileSize, tileSize));
         	}
         }
+        
+        post(new Runnable() {public void run() {requestLayout();}});
+        
+		super.onSizeChanged(w, h, oldw, oldh);
 	}
 
 	public void setAconn4EventListener(Aconn4EventListener l) {

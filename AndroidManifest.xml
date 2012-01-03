@@ -11,7 +11,8 @@
         android:label="@string/app_name" >
         <activity
             android:label="@string/app_name"
-            android:name=".Aconn4Activity">
+            android:name=".Aconn4Activity"
+            android:configChanges="keyboardHidden|orientation">
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
