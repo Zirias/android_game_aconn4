@@ -18,7 +18,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DataBase extends SQLiteOpenHelper {
 
 	public DataBase(Context context) {
-		super(context, "aconn4", null, 1);
+		super(context, "aconn4", null, 3);
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class DataBase extends SQLiteOpenHelper {
 				+ "difficulty INTEGER, "
 				+ "message VARCHAR, "
 				+ "canCancelDialog INTEGER, "
-				+ "activePlayer INTEGER);");
+				+ "activePlayer INTEGER);");		
 	}
 
 	@Override
@@ -117,10 +117,12 @@ public class DataBase extends SQLiteOpenHelper {
 			boardData = new byte[0];
 		}
 		
-		db.execSQL("DELETE FROM gameState");
+		Cursor c = db.query("gameState", new String[] { "_id" }, "_id = 0",
+				null, null, null, null);
+		boolean isInsert = c.getCount() == 0;
 		
 		ContentValues values = new ContentValues(6);
-		values.put("_id", 0);
+		if (isInsert) values.put("_id", 0);
 		values.put("board", boardData);
 		values.put("mode",state.getMode());
 		values.put("difficulty", Player.getDifficulty());
@@ -132,6 +134,7 @@ public class DataBase extends SQLiteOpenHelper {
 			values.put("activePlayer", 2);
 		}
 		
-		db.insert("gameState", null, values);
+		if (isInsert) db.insert("gameState", null, values);
+		else db.update("gameState", values, "_id = 0", null);
 	}
 }
