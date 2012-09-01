@@ -34,7 +34,7 @@
 		<link>
 			<name>p4j</name>
 			<type>2</type>
-			<location>/mnt/storage/workspace/p4j/src</location>
+			<locationURI>WORKSPACE_LOC/p4j/src</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
