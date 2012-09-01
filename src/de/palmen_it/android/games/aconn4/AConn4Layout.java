@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import de.palmen_it.games.p4j.gamelogic.Piece;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.LightingColorFilter;
+import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -224,6 +226,38 @@ public class AConn4Layout extends LinearLayout implements OnClickListener, OnSee
 		_mode2.setEnabled(enabled);
 		_mode1a.setEnabled(enabled);
 		_difficultySet.setEnabled(enabled);
+	}
+	
+	public void setButtonsScoreData(ArrayList<Integer> bestCols, int[] scores) {
+		if (bestCols == null) {
+			for (Button b: _buttons) {
+				b.getBackground().clearColorFilter();
+				b.setText("O");
+			}
+		} else {
+			int col = 0;
+			for (Button b: _buttons) {
+				int score = scores[col++];
+				if (score < -100)
+					score = -100;
+				if (score > 100)
+					score = 100;
+				float red = 100;
+				float green = 100;
+				if (score < 0)
+					green += score;
+				if (score > 0)
+					red -= score;
+				int color = Color.argb(255,
+						(int) (255 * red / 100),
+						(int) (255 * green / 100), 0);
+				b.getBackground().setColorFilter(color, Mode.MULTIPLY);
+				b.setText("");
+			}
+			for (Integer column: bestCols) {
+				_buttons[column.intValue()].setText("O");
+			}
+		}
 	}
 	
 	public void setMode(int mode) {

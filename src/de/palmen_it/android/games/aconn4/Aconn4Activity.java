@@ -1,5 +1,7 @@
 package de.palmen_it.android.games.aconn4;
 
+import java.util.ArrayList;
+
 import de.palmen_it.games.p4j.gamelogic.Board;
 import de.palmen_it.games.p4j.gamelogic.Piece;
 import de.palmen_it.games.p4j.gamelogic.Player;
@@ -92,6 +94,7 @@ public class Aconn4Activity extends Activity implements Aconn4EventListener {
 		Player p = _state.getActivePlayer();
 		if (p.move(column)) {
 			_layout.setPieceAt(p.getPiece(), p.getLastRow(), p.getLastColumn());
+			if (_state.getMode() == GameState.MODE_1a) _layout.setButtonsScoreData(null, null);
 			if (checkWinner()) return;
 			_state.togglePlayer();
 			p = _state.getActivePlayer();
@@ -114,6 +117,7 @@ public class Aconn4Activity extends Activity implements Aconn4EventListener {
 			return;
 		}
 		_layout.setButtonsEnabled(true);
+		if (_state.getMode() == GameState.MODE_1a) _layout.setButtonsScoreData(null, null);
 		Board b = _state.getBoard();
 		b.clear();
 		_state.setActivePlayer(_state.getPlayer1());
@@ -131,10 +135,26 @@ public class Aconn4Activity extends Activity implements Aconn4EventListener {
 			return;
 		}
 		Player p = _state.getActivePlayer();
-		_layout.setPieceAt(p.getPiece(), p.getLastRow(), p.getLastColumn());
-		_layout.setButtonsEnabled(true);		
-		if (checkWinner()) return;
-		_state.togglePlayer();
+		if (p.getIsHuman()) {
+			_layout.setButtonsEnabled(true);
+			AITask.Descriptor descriptor = new AITask.Descriptor();
+			ArrayList<Integer> bestCols = p.getBestColumns(descriptor);
+			int[] scores = p.getColumnScores(descriptor);
+			_layout.setButtonsScoreData(bestCols, scores);
+		} else {
+			_layout.setPieceAt(p.getPiece(), p.getLastRow(), p.getLastColumn());
+			if (_state.getMode() == GameState.MODE_1a) {
+				if (checkWinner()) return;
+				_state.togglePlayer();
+				_ai = new AITask(this);
+				_ai.execute(_state.getActivePlayer());				
+			}
+			else {
+				_layout.setButtonsEnabled(true);		
+				if (checkWinner()) return;
+				_state.togglePlayer();				
+			}
+		}
 	}
 
 	public void onDifficultyChange(int difficulty) {
